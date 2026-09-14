@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Are An Idiot!</title>
+    <style>
+        /* Blashing background animation */
+        @keyframes flash {
+            0%, 100% { background-color: white; color: black; }
+            50% { background-color: black; color: white; }
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            animation: flash 0.2s infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .main-text {
+            font-size: 4rem;
+            font-weight: bold;
+            text-align: center;
+            user-select: none;
+        }
+
+        /* Bouncing floating windows */
+        .bouncing-box {
+            position: absolute;
+            width: 250px;
+            height: 150px;
+            background: #eee;
+            border: 3px solid #000;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.2);
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            border-radius: 5px;
+            animation: flash 0.2s infinite reverse;
+        }
+
+        .box-header {
+            background: #000080;
+            color: white;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            text-align: center;
+            font-size: 0.8rem;
+            padding: 2px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-text">YOU ARE AN IDIOT! ☺</div>
+
+    <script>
+        // Configuration
+        const MAX_BOXES = 6; // Strictly limited so it never lags your PC
+        const boxes = [];
+
+        // Generate safe simulated windows
+        for (let i = 0; i < MAX_BOXES; i++) {
+            const box = document.createElement('div');
+            box.className = 'bouncing-box';
+            box.innerHTML = '<div class="box-header">jk :)</div><span>You are an idiot!</span><span>☺ ☺ ☺</span>';
+            document.body.appendChild(box);
+
+            // Set random starting positions and speeds
+            boxes.push({
+                element: box,
+                x: Math.random() * (window.innerWidth - 250),
+                y: Math.random() * (window.innerHeight - 150),
+                dx: (Math.random() > 0.5 ? 3 : -3) * (1 + Math.random()),
+                dy: (Math.random() > 0.5 ? 3 : -3) * (1 + Math.random())
+            });
+        }
+
+        // Animation loop to bounce items off edges smoothly
+        function animate() {
+            const width = window.innerWidth - 250;
+            const height = window.innerHeight - 150;
+
+            boxes.forEach(box => {
+                box.x += box.dx;
+                box.y += box.dy;
+
+                // Bounce off left/right
+                if (box.x <= 0 || box.x >= width) {
+                    box.dx *= -1;
+                    box.x = Math.max(0, Math.min(box.x, width));
+                }
+                // Bounce off top/bottom
+                if (box.y <= 0 || box.y >= height) {
+                    box.dy *= -1;
+                    box.y = Math.max(0, Math.min(box.y, height));
+                }
+
+                box.element.style.left = box.x + 'px';
+                box.element.style.top = box.y + 'px';
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Start the bouncing animation
+        animate();
+    </script>
+</body>
+</html>
